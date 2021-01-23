@@ -1,12 +1,12 @@
 HarmonicODE.java
  HarmonicODE
-Grapher.java
- Grapher
-Point.java
- Point
-GraphController.java
- GraphController
 Main.java
  Main
+Point.java
+ Point
+Grapher.java
+ Grapher
+GraphController.java
+ GraphController
 ConsoleStepper.java
  ConsoleStepper

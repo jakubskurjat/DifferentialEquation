@@ -17,10 +17,14 @@ public class ConsoleStepper implements StepHandler {
         double t = interpolator.getCurrentTime();
         double[] x = interpolator.getInterpolatedState();
 
-        points.add(new Point(Math.round(t * 1000) / 1000.0, x[0], x[1]));
+        points.add(new Point(roundNumber(t,3), roundNumber(x[0],3), roundNumber(x[1],3)));
     }
 
     public ArrayList<Point> getPoints() {
         return points;
+    }
+
+    public static double roundNumber(double number, int numberOfSignificantFigures){
+        return ((int) Math.round(number*Math.pow(10,numberOfSignificantFigures)))/Math.pow(10,numberOfSignificantFigures);
     }
 }

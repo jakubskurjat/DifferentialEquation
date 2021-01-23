@@ -31,11 +31,12 @@
             <MenuItem fx:id="largestValue" mnemonicParsing="false" onAction="#largestValueAction" text="5.0" />
         </items>
       </SplitMenuButton>
-      <Label fx:id="labelResult" layoutX="708.0" layoutY="250.0" prefHeight="33.0" prefWidth="80.0" text="Result" />
-      <Button fx:id="plotXt" layoutX="719.0" layoutY="147.0" mnemonicParsing="false" onAction="#plotXtAction" text="plot x(t)" />
-      <Button fx:id="plotVx" layoutX="719.0" layoutY="214.0" mnemonicParsing="false" onAction="#plotVxAction" text="plot v(x)" />
-      <Button fx:id="plotVt" layoutX="719.0" layoutY="180.0" mnemonicParsing="false" onAction="#plotVtAction" text="plot v(t)" />
-      <TextField fx:id="txtMaxXValue" layoutX="708.0" layoutY="73.0" prefHeight="26.0" prefWidth="80.0" promptText="max X value" />
-      <TextField fx:id="txtMaxYValue" layoutX="708.0" layoutY="109.0" prefHeight="26.0" prefWidth="80.0" promptText="max Y value" />
+      <Label fx:id="labelResult" layoutX="709.0" layoutY="283.0" prefHeight="33.0" prefWidth="80.0" text="Result" />
+      <Button fx:id="plotXt" layoutX="720.0" layoutY="180.0" mnemonicParsing="false" onAction="#plotXtAction" text="plot x(t)" />
+      <Button fx:id="plotVx" layoutX="720.0" layoutY="247.0" mnemonicParsing="false" onAction="#plotVxAction" text="plot v(x)" />
+      <Button fx:id="plotVt" layoutX="720.0" layoutY="213.0" mnemonicParsing="false" onAction="#plotVtAction" text="plot v(t)" />
+      <TextField fx:id="txtMaxXValue" layoutX="704.0" layoutY="73.0" prefHeight="26.0" prefWidth="86.0" promptText="max X value" />
+      <TextField fx:id="txtInitialFunctionXValue" layoutX="704.0" layoutY="109.0" prefHeight="26.0" prefWidth="86.0" promptText="initial X value" />
+      <TextField fx:id="txtInitialFunctionVValue" layoutX="704.0" layoutY="145.0" prefHeight="26.0" prefWidth="86.0" promptText="initial V value" />
    </children>
 </AnchorPane>

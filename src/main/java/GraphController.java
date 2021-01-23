@@ -1,15 +1,17 @@
-import java.net.URL;
-import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SplitMenuButton;
-import javafx.scene.control.TextField;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.*;
+import org.apache.commons.math3.ode.FirstOrderIntegrator;
+import org.apache.commons.math3.ode.nonstiff.EulerIntegrator;
+
+import javax.swing.*;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
 
 public class GraphController {
 
@@ -56,36 +58,170 @@ public class GraphController {
     private TextField txtMaxXValue;
 
     @FXML
-    private TextField txtMaxYValue;
+    private TextField txtInitialFunctionXValue;
+
+    @FXML
+    private TextField txtInitialFunctionVValue;
+
+    Grapher grapher;
 
     @FXML
     void smallestValueAction(ActionEvent event) {
-
+        splitMenuButton.setText(smallestValue.getText());
     }
 
     @FXML
     void mediumValueAction(ActionEvent event) {
-
+        splitMenuButton.setText(mediumValue.getText());
     }
 
     @FXML
     void largestValueAction(ActionEvent event) {
-
-    }
-
-    @FXML
-    void plotVtAction(ActionEvent event) {
-
-    }
-
-    @FXML
-    void plotVxAction(ActionEvent event) {
-
+        splitMenuButton.setText(largestValue.getText());
     }
 
     @FXML
     void plotXtAction(ActionEvent event) {
+        if(areAllValuesGiven()){
+            HarmonicODE harmonicODE = new HarmonicODE(Double.parseDouble(splitMenuButton.getText()));
+            FirstOrderIntegrator euler = new EulerIntegrator(0.001);
+            ConsoleStepper consoleStepper = new ConsoleStepper();
+            ArrayList<Point> points = consoleStepper.getPoints();
 
+            euler.addStepHandler(consoleStepper);
+
+            double[] x0 = {Double.parseDouble(txtInitialFunctionXValue.getText()), Double.parseDouble(txtInitialFunctionVValue.getText())};
+            double[] x = new double[2];
+
+            euler.integrate(harmonicODE, 0, x0, Double.parseDouble(txtMaxXValue.getText()), x);
+
+            lineChart.getData().clear();
+
+            XYChart.Series series = new XYChart.Series();
+
+            for (int i = 0; i < points.size(); i+= 25) {
+                series.getData().add(new XYChart.Data("" + points.get(i).getT(), points.get(i).getX()));
+            }
+            lineChart.getData().add(series);
+            lineChart.setLegendVisible(true);
+            grapher = new Grapher(lineChart);
+
+            labelResult.setText("x = " + Math.round(points.get(points.size() - 1).getX() * 1000) / 1000.0);
+        }
+    }
+
+    @FXML
+    void plotVtAction(ActionEvent event) {
+        if(areAllValuesGiven()){
+            HarmonicODE harmonicODE = new HarmonicODE(Double.parseDouble(splitMenuButton.getText()));
+            FirstOrderIntegrator euler = new EulerIntegrator(0.001);
+            ConsoleStepper consoleStepper = new ConsoleStepper();
+            ArrayList<Point> points = consoleStepper.getPoints();
+
+            euler.addStepHandler(consoleStepper);
+
+            double[] x0 = {Double.parseDouble(txtInitialFunctionXValue.getText()), Double.parseDouble(txtInitialFunctionVValue.getText())};
+            double[] x = new double[2];
+
+            euler.integrate(harmonicODE, 0, x0, Double.parseDouble(txtMaxXValue.getText()), x);
+
+            lineChart.getData().clear();
+
+            XYChart.Series series = new XYChart.Series();
+
+            for (int i = 0; i < points.size(); i+= 25) {
+                series.getData().add(new XYChart.Data("" + points.get(i).getT(), points.get(i).getV()));
+            }
+            lineChart.getData().add(series);
+            lineChart.setLegendVisible(true);
+            grapher = new Grapher(lineChart);
+
+            labelResult.setText("v = " + points.get(points.size() - 1).getV());
+        }
+    }
+
+    @FXML
+    void plotVxAction(ActionEvent event) {
+        if(areAllValuesGiven()){
+            HarmonicODE harmonicODE = new HarmonicODE(Double.parseDouble(splitMenuButton.getText()));
+            FirstOrderIntegrator euler = new EulerIntegrator(0.001);
+            ConsoleStepper consoleStepper = new ConsoleStepper();
+            ArrayList<Point> points = consoleStepper.getPoints();
+
+            euler.addStepHandler(consoleStepper);
+
+            double[] x0 = {Double.parseDouble(txtInitialFunctionXValue.getText()), Double.parseDouble(txtInitialFunctionVValue.getText())};
+            double[] x = new double[2];
+
+            euler.integrate(harmonicODE, 0, x0, Double.parseDouble(txtMaxXValue.getText()), x);
+
+            lineChart.getData().clear();
+
+            XYChart.Series series = new XYChart.Series();
+
+            for (int i = 0; i < points.size(); i+= 25) {
+                series.getData().add(new XYChart.Data("" + points.get(i).getX(), points.get(i).getV()));
+            }
+            lineChart.getData().add(series);
+            lineChart.setLegendVisible(true);
+            grapher = new Grapher(lineChart);
+
+            labelResult.setText("v = " + points.get(points.size() - 1).getV());
+        }
+    }
+
+    private boolean areAllValuesGiven(){
+        if(splitMenuButton.getText().length() == 1){
+            JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(JOptionPane.getRootFrame()),"Select value!");
+            return false;
+        }
+        else if(txtMaxXValue.getText().equals("") || txtInitialFunctionXValue.getText().equals("") || txtInitialFunctionVValue.getText().equals("")){
+            JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(JOptionPane.getRootFrame()),"Max X or initial values are empty!");
+            return false;
+        }
+        else if(!(isNumberAndAtLeastZero(txtMaxXValue) && isNumberAndAtLeastZero(txtInitialFunctionXValue) && isNumberAndAtLeastZero(txtInitialFunctionVValue))){
+            JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(JOptionPane.getRootFrame()),"Max X have to be greater than 0 or values are not a number!");
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean isNumberAndAtLeastZero(TextField value){
+        int i = 0;
+
+        System.out.println(value.getId().equals("txtMaxXValue"));
+
+        if(!value.equals("") && value.getId().equals("txtMaxXValue")) {
+            while (i < value.getLength()) {
+                if (value.getText().charAt(0) == 46 && value.getLength() == 1) return false;
+                else if (value.getLength() == 2 && value.getText().lastIndexOf('.') == 1) return false;
+                else if (value.getText().lastIndexOf('.') > 1) return false;
+                else if (i==0 && (value.getText().charAt(i) <= 48 || value.getText().charAt(i) > 57)) {
+                    return false;
+                }
+
+                i++;
+            }
+            return true;
+
+        } else if(!value.equals("") && !value.getId().equals("txtMaxXValue")){
+            while (i < value.getLength()) {
+                if (value.getText().charAt(0) == 46 && value.getLength() == 1) return false;
+                else if (value.getLength() == 2 && value.getText().lastIndexOf('.') == 1) return false;
+                else if (value.getText().lastIndexOf('.') > 1) return false;
+                else if (value.getText().charAt(i) < 48 || value.getText().charAt(i) > 57) {
+                    System.out.println("eloeloeloe");
+                    return false;
+                }
+
+                i++;
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     @FXML
@@ -102,7 +238,8 @@ public class GraphController {
         assert plotVx != null : "fx:id=\"plotVx\" was not injected: check your FXML file 'graph.fxml'.";
         assert plotVt != null : "fx:id=\"plotVt\" was not injected: check your FXML file 'graph.fxml'.";
         assert txtMaxXValue != null : "fx:id=\"txtMaxXValue\" was not injected: check your FXML file 'graph.fxml'.";
-        assert txtMaxYValue != null : "fx:id=\"txtMaxYValue\" was not injected: check your FXML file 'graph.fxml'.";
+        assert txtInitialFunctionXValue != null : "fx:id=\"txtInitialYValue\" was not injected: check your FXML file 'graph.fxml'.";
+        assert txtInitialFunctionVValue != null : "fx:id=\"txtInitialFunctionVValue\" was not injected: check your FXML file 'graph.fxml'.";
 
     }
 }
