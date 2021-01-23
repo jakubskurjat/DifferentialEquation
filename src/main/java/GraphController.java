@@ -96,7 +96,7 @@ public class GraphController {
             lineChart.setLegendVisible(true);
             grapher = new Grapher(lineChart);
 
-            labelResult.setText("x = " + Math.round(points.get(points.size() - 1).getX() * 1000) / 1000.0);
+            labelResult.setText("x = " + points.get(points.size() - 1).getX());
         }
     }
 
