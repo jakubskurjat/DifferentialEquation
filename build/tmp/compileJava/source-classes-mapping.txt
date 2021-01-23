@@ -4,9 +4,9 @@ Main.java
  Main
 Point.java
  Point
+ConsoleStepper.java
+ ConsoleStepper
 Grapher.java
  Grapher
 GraphController.java
  GraphController
-ConsoleStepper.java
- ConsoleStepper
