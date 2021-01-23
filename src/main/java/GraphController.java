@@ -65,6 +65,10 @@ public class GraphController {
 
     Grapher grapher;
 
+    ArrayList<Point> points;
+
+    XYChart.Series series;
+
     @FXML
     void smallestValueAction(ActionEvent event) {
         splitMenuButton.setText(smallestValue.getText());
@@ -83,26 +87,11 @@ public class GraphController {
     @FXML
     void plotXtAction(ActionEvent event) {
         if(areAllValuesGiven()){
-            HarmonicODE harmonicODE = new HarmonicODE(Double.parseDouble(splitMenuButton.getText()));
-            FirstOrderIntegrator euler = new EulerIntegrator(0.01);
-            ConsoleStepper consoleStepper = new ConsoleStepper();
-            ArrayList<Point> points = consoleStepper.getPoints();
+            preparingVariables();
 
-            euler.addStepHandler(consoleStepper);
-
-            double[] x0 = {Double.parseDouble(txtInitialFunctionXValue.getText()), Double.parseDouble(txtInitialFunctionVValue.getText())};
-            double[] x = new double[2];
-
-            euler.integrate(harmonicODE, -Double.parseDouble(txtMaxTValue.getText()), x0, Double.parseDouble(txtMaxTValue.getText()), x);
-
-            lineChart.setAnimated(false);
-            lineChart.getData().clear();
-
-            XYChart.Series series = new XYChart.Series();
-
-            for (int i = 0; i < points.size(); i++) {
+            for (int i = 0; i < points.size(); i++)
                 series.getData().add(new XYChart.Data("" + points.get(i).getT(), points.get(i).getX()));
-            }
+
             lineChart.getData().add(series);
             lineChart.setLegendVisible(true);
             grapher = new Grapher(lineChart);
@@ -114,26 +103,11 @@ public class GraphController {
     @FXML
     void plotVtAction(ActionEvent event) {
         if(areAllValuesGiven()){
-            HarmonicODE harmonicODE = new HarmonicODE(Double.parseDouble(splitMenuButton.getText()));
-            FirstOrderIntegrator euler = new EulerIntegrator(0.01);
-            ConsoleStepper consoleStepper = new ConsoleStepper();
-            ArrayList<Point> points = consoleStepper.getPoints();
+            preparingVariables();
 
-            euler.addStepHandler(consoleStepper);
-
-            double[] x0 = {Double.parseDouble(txtInitialFunctionXValue.getText()), Double.parseDouble(txtInitialFunctionVValue.getText())};
-            double[] x = new double[2];
-
-            euler.integrate(harmonicODE, -Double.parseDouble(txtMaxTValue.getText()), x0, Double.parseDouble(txtMaxTValue.getText()), x);
-
-            lineChart.setAnimated(false);
-            lineChart.getData().clear();
-
-            XYChart.Series series = new XYChart.Series();
-
-            for (int i = 0; i < points.size(); i++) {
+            for (int i = 0; i < points.size(); i++)
                 series.getData().add(new XYChart.Data("" + points.get(i).getT(), points.get(i).getV()));
-            }
+
             lineChart.getData().add(series);
             lineChart.setLegendVisible(true);
             grapher = new Grapher(lineChart);
@@ -145,33 +119,36 @@ public class GraphController {
     @FXML
     void plotXvAction(ActionEvent event) {
         if(areAllValuesGiven()){
-            HarmonicODE harmonicODE = new HarmonicODE(Double.parseDouble(splitMenuButton.getText()));
-            FirstOrderIntegrator euler = new EulerIntegrator(0.01);
-            ConsoleStepper consoleStepper = new ConsoleStepper();
-            ArrayList<Point> points = consoleStepper.getPoints();
+            preparingVariables();
 
-            euler.addStepHandler(consoleStepper);
-
-            double[] x0 = {Double.parseDouble(txtInitialFunctionXValue.getText()), Double.parseDouble(txtInitialFunctionVValue.getText())};
-            double[] x = new double[2];
-
-            euler.integrate(harmonicODE, -Double.parseDouble(txtMaxTValue.getText()), x0, Double.parseDouble(txtMaxTValue.getText()), x);
-
-            lineChart.setAnimated(false);
-            lineChart.getData().clear();
-
-            XYChart.Series series = new XYChart.Series();
-
-            for (int i = 0; i < points.size(); i++) {
+            for (int i = 0; i < points.size(); i++)
                 series.getData().add(new XYChart.Data("" + points.get(i).getV(), points.get(i).getX()));
-                System.out.println(points.get(i).getV() + "\t" + points.get(i).getX());
-            }
+
             lineChart.getData().add(series);
             lineChart.setLegendVisible(true);
             grapher = new Grapher(lineChart);
 
             labelResult.setText("x = " + points.get(points.size()-1).getX() + "\nv = " + points.get(points.size() - 1).getV());
         }
+    }
+
+    private void preparingVariables(){
+        HarmonicODE harmonicODE = new HarmonicODE(Double.parseDouble(splitMenuButton.getText()));
+        FirstOrderIntegrator euler = new EulerIntegrator(0.01);
+        ConsoleStepper consoleStepper = new ConsoleStepper();
+        points = consoleStepper.getPoints();
+
+        euler.addStepHandler(consoleStepper);
+
+        double[] x0 = {Double.parseDouble(txtInitialFunctionXValue.getText()), Double.parseDouble(txtInitialFunctionVValue.getText())};
+        double[] x = new double[2];
+
+        euler.integrate(harmonicODE, -Double.parseDouble(txtMaxTValue.getText()), x0, Double.parseDouble(txtMaxTValue.getText()), x);
+
+        lineChart.setAnimated(false);
+        lineChart.getData().clear();
+
+        series = new XYChart.Series();
     }
 
     private boolean areAllValuesGiven(){
@@ -193,8 +170,6 @@ public class GraphController {
 
     private boolean isNumberAndAtLeastZero(TextField value){
         int i = 0;
-
-        System.out.println(value.getId().equals("txtMaxTValue"));
 
         if(!value.equals("") && value.getId().equals("txtMaxTValue")) {
             while (i < value.getLength()) {
