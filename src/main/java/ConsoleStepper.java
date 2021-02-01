@@ -24,7 +24,7 @@ public class ConsoleStepper implements StepHandler {
         return points;
     }
 
-    public static double roundNumber(double number, int numberOfSignificantFigures){
+    private static double roundNumber(double number, int numberOfSignificantFigures){
         return ((int) Math.round(number*Math.pow(10,numberOfSignificantFigures)))/Math.pow(10,numberOfSignificantFigures);
     }
 }
